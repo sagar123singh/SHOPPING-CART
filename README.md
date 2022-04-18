@@ -286,7 +286,7 @@ yaml
 - Get productId in request body.
 - Get key 'removeProduct' in request body. 
 - Make sure that cart exist.
-- Key 'removeProduct' denotes whether a product is to be removed({removeProduct: 0}) or its quantity has to be decremented by 1({removeProduct: 1}).
+- Key 'removeProduct' denotes whether a product is to be removed({removeProduct: 0}) or its quantity has to be decremented by 1({removeProduct: 1})
 - Make sure the userId in params and in JWT token match.
 - Make sure the user exist
 - Get product(s) details in response body.
@@ -451,12 +451,12 @@ yaml
     quantity: 1
   }],
   totalPrice: 50.99,
-  totalItems: 2,
+  totalItems: 3,
   createdAt: "2021-09-17T04:25:07.803Z",
   updatedAt: "2021-09-17T04:25:07.803Z",
 }
 
-
+<!--  -->
 ### orders
 yaml
 {

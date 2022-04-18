@@ -1,24 +1,34 @@
 const express = require('express');
-const bodyParser = require('body-parser');
-const mongoose = require('mongoose');
-const router = require('./route/route');
+var bodyParser = require('body-parser');
 const multer = require('multer');
-require('dotenv').config();
+
+
+const route = require('./route/route.js');
 
 const app = express();
 
+
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
+
+
+// app.use(upload.array()); 
+// app.use(express.static('public'));
+
 app.use(multer().any());
 
-mongoose.connect(process.env.MONGO_DB_CLUSTER).then(() => {
-    console.log("MongoDB connected");
-}).catch((error) => {
-    console.log(error.message)
+
+
+const mongoose = require('mongoose');
+
+mongoose.connect("mongodb+srv://sagar123singh:ds@cluster0.oye0t.mongodb.net/group17Database?authSource=admin&replicaSet=atlas-gyucxl-shard-0&readPreference=primary&appname=MongoDB%20Compass&ssl=true",{useNewUrlParser:true})
+.then(()=>console.log("MongoDb connected"))
+.catch(err=>console.log(err))
+app.use('/',route);
+
+
+app.listen(process.env.PORT || 3000, function() {
+	console.log('Express app running on port ' + (process.env.PORT || 3000))
 });
 
-app.use('/', router);
 
-app.listen(process.env.PORT || 3000, () => {
-    console.log(`Server is running on PORT ${process.env.PORT || 3000}`)
-}); 

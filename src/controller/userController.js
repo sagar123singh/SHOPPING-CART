@@ -1,5 +1,5 @@
-const userSchema = require('../model/user.model');
-const awsService = require('../service/aws.service');
+const userSchema = require('../model/userModel');
+const aws = require('../AWS/aws');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
@@ -55,7 +55,7 @@ const register = async (req, res) => {
             if (file[0].mimetype.indexOf('image') == -1) {
                 return res.status(400).send({ status: false, message: 'Only image files are allowed !' })
             }
-            const profile_url = await awsService.uploadFile(file[0]);
+            const profile_url = await aws.uploadFile(file[0]);
             data.profileImage = profile_url;
         }
         else {
@@ -187,7 +187,7 @@ const updateUserProfile = async (req, res) => {
             if (file[0].mimetype.indexOf('image') == -1) {
                 return res.status(400).send({status:false,message:'Only image files are allowed !'});
             }
-            const profile_url = await awsService.uploadFile(file[0]);
+            const profile_url = await aws.uploadFile(file[0]);
             data.profileImage = profile_url;
         }
         const updateRes = await userSchema.findByIdAndUpdate(userId, data, { new: true });

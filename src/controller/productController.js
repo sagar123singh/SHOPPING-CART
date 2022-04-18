@@ -1,5 +1,5 @@
-const productSchema = require('../model/product.model');
-const awsService = require('../service/aws.service');
+const productSchema = require('../model/productModel');
+const aws = require('../AWS/aws');
 const mongoose = require('mongoose');
 
 const isValidObjectId = (ObjectId) => {
@@ -42,7 +42,7 @@ const createProduct = async (req, res) => {
             if (file[0].mimetype.indexOf('image') == -1) {
                 return res.status(400).send({ status: false, message: 'Only image files are allowed !' });
             }
-            const profile_url = await awsService.uploadFile(file[0]);
+            const profile_url = await aws.uploadFile(file[0]);
             data.productImage = profile_url;
         }
         else {
@@ -87,6 +87,7 @@ const getProudcts = async (req, res) => {
                     queryData.price = {
                         $lt: data.priceLessThan
                     }
+                    
                 }
             }
             if (data['priceGreaterThan'] && data['priceLessThan']) {
@@ -186,7 +187,7 @@ const updateProductById = async (req, res) => {
                 if (file[0].mimetype.indexOf('image') == -1) {
                     return res.status(400).send({ status: false, message: 'Only image files are allowed !' });
                 }
-                const profile_url = await awsService.uploadFile(file[0]);
+                const profile_url = await aws.uploadFile(file[0]);
                 data.productImage = profile_url;
             }
             const updateRes = await productSchema.findByIdAndUpdate(productId, data, { new: true });

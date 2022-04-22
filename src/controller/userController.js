@@ -66,7 +66,7 @@ const register = async (req, res) => {
         else {
             return res.status(400).send({ status: false, message: 'Profile Image is required !' })
         }
-        
+         data.password = bcrypt.hashSync(data.password, 10);
         
         const dataRes = await userSchema.create(data);
         console.log(dataRes)

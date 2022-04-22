@@ -2,6 +2,11 @@ const userSchema = require('../model/userModel');
 const aws = require('../AWS/aws');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const mongoose = require('mongoose');
+
+const isValidObjectId = (ObjectId) => {
+    return mongoose.Types.ObjectId.isValid(ObjectId);
+}
 
 const register = async (req, res) => {
     try {
@@ -61,8 +66,14 @@ const register = async (req, res) => {
         else {
             return res.status(400).send({ status: false, message: 'Profile Image is required !' })
         }
+        
+        
         const dataRes = await userSchema.create(data);
+        console.log(dataRes)
+        delete(dataRes.password)
         return res.status(201).send({ status: true, message: "User created successfully", data: dataRes });
+
+        
     } catch (err) {
         res.status(500).send({ status: false, error: err.message })
     }
@@ -100,7 +111,7 @@ const login = async (req, res) => {
 
             // creating JWT
 
-            const token = jwt.sign(payLoad, secretKey, { expiresIn: "1hr" })
+            const token = jwt.sign(payLoad, secretKey, { expiresIn: "20hr" })
 
             res.header("Authorization", "bearer" + " " + token)
 
@@ -111,16 +122,25 @@ const login = async (req, res) => {
             }
         })
     } catch (err) {
-        return res.status(500).send({status: false,error: err.messag});
+        return res.status(500).send({status: false,error: err.message});
     }
 }
 
 const getUserProfile = async (req, res) => {
     try {
         const userId = req.params.userId;
-        const userRes = await userSchema.findById(userId);
+
+        if(!isValidObjectId(userId)){
+            return res.status(400).send({status:false,message:`${userId} is not a valid userId`})
+        }
+
+
+
+        const userRes = await userSchema.findById(userId,{password: 0 }).lean();
        
         return res.status(200).send({status: true, message: 'User profile details', data: userRes});
+
+    
 
     } catch (err) {
         return res.status(500).send({status: false,error: err.message
@@ -190,10 +210,12 @@ const updateUserProfile = async (req, res) => {
             const profile_url = await aws.uploadFile(file[0]);
             data.profileImage = profile_url;
         }
+        
+
         const updateRes = await userSchema.findByIdAndUpdate(userId, data, { new: true });
         return res.status(200).send({status: true,message: `${Object.keys(data).length} field has been updated successfully !`,data: updateRes});
     } catch (err) {
-   return res.status(500).send({status: false,error: err.messag});
+   return res.status(500).send({status: false,error: err.message});
 }
 }
 module.exports = {

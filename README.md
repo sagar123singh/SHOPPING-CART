@@ -477,3 +477,8 @@ yaml
   createdAt: "2021-09-17T04:25:07.803Z",
   updatedAt: "2021-09-17T04:25:07.803Z",
 }
+
+
+//user model  password
+//get product with query params ---- $regexp
+//update product  [array of available sizes]

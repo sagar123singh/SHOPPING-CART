@@ -7,6 +7,7 @@ const productController = require('../controller/productController');
 const cartController = require("../controller/cartController")
 const orderController = require("../controller/orderController")
 const authMiddleware = require('../middleware/auth.middleware');
+const OrderController = require('../controller/orderController');
 
 router.post('/register', userController.register);
 router.post('/login', userController.login);
@@ -15,7 +16,7 @@ router.get('/user/:userId/profile', authMiddleware.authenticate, authMiddleware.
 router.put('/user/:userId/profile', authMiddleware.authenticate, authMiddleware.authorisation, userController.updateUserProfile);
 
 router.post('/products', productController.createProduct);
-router.get('/products', productController.getProudcts); 
+router.get('/products', productController.getProducts); 
 router.get('/products/:productId', productController.getProductById);
 router.put('/products/:productId', productController.updateProductById);
 router.delete('/products/:productId', productController.deleteProductById);
@@ -26,7 +27,8 @@ router.get('/users/:userId/cart',authMiddleware.authenticate, authMiddleware.aut
 router.put('/users/:userId/cart',authMiddleware.authenticate, authMiddleware.authorisation, cartController.updateCart);
 router.delete('/users/:userId/cart',authMiddleware.authenticate, authMiddleware.authorisation, cartController.deleteCart);
 
-router.post('/users/:userId/cart',authMiddleware.authenticate, authMiddleware.authorisation, orderController.createOrder);
+router.post('/users/:userId/orders', authMiddleware.authenticate, authMiddleware.authorisation, OrderController.createOrder);
+router.put('/users/:userId/orders', authMiddleware.authenticate, authMiddleware.authorisation, OrderController.updateOrder);
 
 
 module.exports = router;

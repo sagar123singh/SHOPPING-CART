@@ -75,13 +75,5 @@ const userSchema = new mongoose.Schema({
 }, {
     timestamps: true
 });
-userSchema.pre('save', function (next) {
-    bcrypt.hash(this.password, 10).then((encryptedPassword) => {
-        this.password = encryptedPassword;
-        next();
-    }).catch((error) => {
-        throw error;
-    });
-});
 
 module.exports = mongoose.model('User', userSchema);
